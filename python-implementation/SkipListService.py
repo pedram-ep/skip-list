@@ -9,13 +9,18 @@ class SkipListService:
         while input_action != 0:
             input_action = input(
             """Enter one of the following actions:
-                1 - Add all of elements of an unsorted list to the skip list
-                2 - Add an item to the skip list
-                3 - Find an item in the skip list
-                4 - Remove the given item from the skip list
-                5 - Display the skip list
-                
-                0 - End the program\n""")
+    1 - Add all of elements of an unsorted list to the skip list
+    2 - Add an item to the skip list
+    3 - Find an item in the skip list
+    4 - Remove the given item from the skip list
+    5 - Display the skip list
+
+    6 - Testing All Operations
+    7 - Speed Comparison
+
+    8 - Visualizer off/on
+
+    0 - End the program\n""")
             
             match input_action:
                 case "0":
@@ -68,4 +73,42 @@ class SkipListService:
                         self.sl.visualize()
                         
                 case "6":
+                    self.operationsTester(visualizerOn=visualizerOn)
+
+                case "6":
                     visualizerOn = not visualizerOn
+
+    def operationsTester(self, visualizerOn):
+        print("===== Simple Operations Test =====")
+        
+        print("\nInserting values: 5, 2, 8, 1, 10")
+        self.sl.insert(5)
+        self.sl.insert(2)
+        self.sl.insert(8)
+        self.sl.insert(1)
+        self.sl.insert(10)
+        if visualizerOn:
+            self.sl.visualize()
+        
+        print("\nContains test:")
+        print("Contains 5?", self.sl.contains(5))  # True
+        print("Contains 3?", self.sl.contains(3))  # False
+        print("Contains 10?", self.sl.contains(10))  # True
+        
+        print("\nRemoving values: 2, 10")
+        self.sl.remove(2)
+        self.sl.remove(10)
+        if visualizerOn:
+            self.sl.visualize()
+        
+        print("\nEdge case tests:")
+        print("Remove non-existent 100:", self.sl.remove(100))  # False
+        print("Insert duplicate 5:", self.sl.insert(5))  # False (already exists)
+        
+        if visualizerOn:
+            print("\nEmpty skip list visualization:")
+            emptySL = SkipList()
+            emptySL.visualize()
+            del emptySL
+        
+        print("===== End Simple Operations Test =====")
