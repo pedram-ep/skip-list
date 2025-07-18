@@ -1,4 +1,8 @@
+import time
+import random
+from array import array
 from SkipList import SkipList
+from SimpleLinkedList import SimpleLinkedList
 
 class SkipListService:
     def __init__(self):
@@ -16,7 +20,7 @@ class SkipListService:
     5 - Display the skip list
 
     6 - Testing All Operations
-    7 - Speed Comparison
+    7 - Time Performance Comparison (vs. Array, Python List, and Linked List)
 
     8 - Visualizer off/on
 
@@ -75,7 +79,14 @@ class SkipListService:
                 case "6":
                     self.operationsTester(visualizerOn=visualizerOn)
 
-                case "6":
+                case "7":
+                    numElements = int(input("Enter number of elements for the test: "))
+                    if numElements > 1:
+                        self.performanceComparison(num_elements=numElements)
+                    else:
+                        self.performanceComparison()
+
+                case "8":
                     visualizerOn = not visualizerOn
 
     def operationsTester(self, visualizerOn):
@@ -112,3 +123,105 @@ class SkipListService:
             del emptySL
         
         print("===== End Simple Operations Test =====")
+
+    def performanceComparison(self, num_elements=10000):
+        print(f"\n\n===== Performance Comparison Test ({num_elements} elements) =====")
+        random.seed(42)
+        test_data = [random.randint(1, 1000000) for _ in range(num_elements)]
+        search_data = random.sample(test_data, min(1000, num_elements))
+        remove_data = random.sample(test_data, min(1000, num_elements))
+        
+        # SkipList performance
+        sl = SkipList()
+        start = time.time()
+        for val in test_data:
+            sl.insert(val)
+        sl_insert_time = time.time() - start
+        
+        start = time.time()
+        for val in search_data:
+            sl.contains(val)
+        sl_search_time = time.time() - start
+        
+        start = time.time()
+        for val in remove_data:
+            sl.remove(val)
+        sl_remove_time = time.time() - start
+        
+        # Python list performance
+        py_list = []
+        start = time.time()
+        for val in test_data:
+            py_list.append(val)
+        py_list_insert_time = time.time() - start
+        
+        start = time.time()
+        for val in search_data:
+            val in py_list
+        py_list_search_time = time.time() - start
+        
+        start = time.time()
+        for val in remove_data:
+            try:
+                py_list.remove(val)
+            except ValueError:
+                pass
+        py_list_remove_time = time.time() - start
+        
+        # Array performance
+        py_array = array('i')
+        start = time.time()
+        for val in test_data:
+            py_array.append(val)
+        py_array_insert_time = time.time() - start
+        
+        start = time.time()
+        for val in search_data:
+            val in py_array
+        py_array_search_time = time.time() - start
+        
+        start = time.time()
+        for val in remove_data:
+            try:
+                py_array.remove(val)
+            except ValueError:
+                pass
+        py_array_remove_time = time.time() - start
+        
+        # Simple linked list performance
+        sll = SimpleLinkedList()
+        start = time.time()
+        for val in test_data:
+            sll.insert(val)
+        sll_insert_time = time.time() - start
+        
+        start = time.time()
+        for val in search_data:
+            sll.contains(val)
+        sll_search_time = time.time() - start
+        
+        start = time.time()
+        for val in remove_data:
+            sll.remove(val)
+        sll_remove_time = time.time() - start
+        
+        # Print results
+        print("\nInsertion Performance:")
+        print(f"SkipList:     {sl_insert_time:.6f} seconds")
+        print(f"Python List:  {py_list_insert_time:.6f} seconds")
+        print(f"Array:        {py_array_insert_time:.6f} seconds")
+        print(f"Linked List:  {sll_insert_time:.6f} seconds")
+        
+        print("\nSearch Performance:")
+        print(f"SkipList:     {sl_search_time:.6f} seconds")
+        print(f"Python List:  {py_list_search_time:.6f} seconds")
+        print(f"Array:        {py_array_search_time:.6f} seconds")
+        print(f"Linked List:  {sll_search_time:.6f} seconds")
+        
+        print("\nRemoval Performance:")
+        print(f"SkipList:     {sl_remove_time:.6f} seconds")
+        print(f"Python List:  {py_list_remove_time:.6f} seconds")
+        print(f"Array:        {py_array_remove_time:.6f} seconds")
+        print(f"Linked List:  {sll_remove_time:.6f} seconds")
+
+        print("===== End Performance Comparison Test =====")

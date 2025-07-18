@@ -1,9 +1,5 @@
 from random import randint
-
-class Node:  
-    def __init__(self, height = 0, value = None):
-        self.element = value
-        self.next = [None] * height
+from Node import Node
 
 class SkipList:
     def __init__(self):
